@@ -2,7 +2,12 @@
 JHED: wtan12*/
 #include "opc.h"
 
-
+static char *opcodes[] = {"HLT", "EXT", "LDA", "LDI", "STA", "STI",
+						  "ADD", "SUB", "JMP", "JMZ", "AND", "IOR",
+						  "XOR", "ADL", "ADC", "SBB", "NEG", "COM",
+						  "CLR", "SET", "RTL", "RTR", "LSL", "LSR",
+						  "ASR", "TST", "CLC", "SEC", "TCA", "TVA",
+						  "JAL", "NOP"};
 
 void to_hexchar(int decimal, char *hex, int numBits)
 {

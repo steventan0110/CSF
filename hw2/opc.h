@@ -8,12 +8,7 @@ JHED: wtan12*/
 #define _OPC_H
 #define SCRAM_SIZE 256
 
-static char *opcodes[] = {"HLT", "EXT", "LDA", "LDI", "STA", "STI",
-						  "ADD", "SUB", "JMP", "JMZ", "AND", "IOR",
-						  "XOR", "ADL", "ADC", "SBB", "NEG", "COM",
-						  "CLR", "SET", "RTL", "RTR", "LSL", "LSR",
-						  "ASR", "TST", "CLC", "SEC", "TCA", "TVA",
-						  "JAL", "NOP"};
+
 /* convert to hex in a string format */
 void to_hexchar(int decimal, char *hex, int numBits);
 /* concatenate the string */
