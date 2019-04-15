@@ -104,7 +104,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
 
     if (strcmp(ins, "HLT") == 0)
     {
-        *pc = 0;
+        
         display(pc, ac, mne);
         return 1;
     }
