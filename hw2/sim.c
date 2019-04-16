@@ -74,12 +74,11 @@ int main(int argc, char *argv[])
             perror("Error opening output file");
             exit(2);
         }
-        load(fin, mem);
+        int size = load(fin, mem);
         run();
 
         //now need to dump the memory into the output file
-        int size = sizeof(mem) / sizeof(uint8_t);
-        fwrite(mem, sizeof(uint8_t), size, fout);
+        fwrite(mem, sizeof(uint8_t), size+1, fout);
         fclose(fin);
         fclose(fout);
     }

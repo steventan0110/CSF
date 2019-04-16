@@ -7,22 +7,18 @@ static uint8_t C = 0;
 static int size = 0;
 
 //load the content in the file/stdin into the memory of 256 bytes, truncate if too long
-void load(FILE* fin, uint8_t *mem)
+int load(FILE *fin, uint8_t *mem)
 {
     int c;
     int num = 0;
 
-  
     while (((c = fgetc(fin)) != EOF) && (num < SCRAM_SIZE))
     {
-        printf("%c\n",c);
         mem[num] = c;
         num++;
     }
-    
-    size = num;
-    printf("%d\n", size);
-    
+    size = num - 1;
+    return size;
 }
 
 void retrieve(char *mne, char *ins)
@@ -138,7 +134,10 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     {
 
         if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
 
         *ac = mem[adr];
         display(pc, ac, mne);
@@ -147,10 +146,16 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "LDI") == 0)
     {
         if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
         uint8_t mbr = mem[adr];
         if (check_adr(mbr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
 
         *ac = mem[mbr];
         display(pc, ac, mne);
@@ -160,7 +165,10 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     {
 
         if (check_adr(adr))
-            exit(5);
+        {
+            printf("An attempt was made to write data beyond the end of the input file.\n");
+            exit(6);
+        }
         mem[adr] = *ac;
         display(pc, ac, mne);
         return 0;
@@ -168,11 +176,17 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "STI") == 0)
     {
 
-        if (check_adr( adr))
-            exit(5);
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to write data beyond the end of the input file.\n");
+            exit(6);
+        }
         uint8_t mbr = mem[adr];
-        if (check_adr( mbr))
-            exit(5);
+        if (check_adr(mbr))
+        {
+            printf("An attempt was made to write data beyond the end of the input file.\n");
+            exit(6);
+        }
 
         mem[mbr] = *ac;
         display(pc, ac, mne);
@@ -181,8 +195,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "ADD") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
 
         if ((int)*ac + (int)mem[adr] > 255)
         {
@@ -201,8 +218,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "SUB") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
 
         if ((int)*ac + (uint8_t)~mem[adr] + 1 > 255)
         {
@@ -221,9 +241,13 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "JMP") == 0)
     {
 
-        display(pc, ac, mne);
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to execute code beyond the end of the input file.\n");
             exit(4);
+        }
+
+        display(pc, ac, mne);
 
         *pc = adr;
         return 0;
@@ -235,7 +259,10 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
         if (*ac == 0)
         {
             if (check_adr(adr))
+            {
+                printf("An attempt was made to execute code beyond the end of the input file.\n");
                 exit(4);
+            }
 
             *pc = adr;
         }
@@ -244,8 +271,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "AND") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
         *ac = *ac & mem[adr];
         display(pc, ac, mne);
         return 0;
@@ -253,8 +283,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "IOR") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
         *ac = *ac | mem[adr];
         display(pc, ac, mne);
         return 0;
@@ -262,8 +295,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "XOR") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
         *ac = *ac ^ mem[adr];
         display(pc, ac, mne);
         return 0;
@@ -295,8 +331,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     else if (strcmp(ins, "ADC") == 0)
     {
 
-        if (check_adr( adr))
+        if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
 
         if ((int)*ac + (int)mem[adr] + C > 255)
             C = 1;
@@ -309,7 +348,11 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     {
 
         if (check_adr(adr))
+        {
+            printf("An attempt was made to read data beyond the end of the input file.\n");
             exit(5);
+        }
+            
 
         int num = (int)*ac + (uint8_t)~mem[adr] + C;
         *ac = *ac + (~mem[adr]) + C;
@@ -443,6 +486,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
     }
     else
     {
+        printf("The wrong number of arguments were given.\n");
         exit(1);
     }
 }

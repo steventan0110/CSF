@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "opc.h"
 
-void load(FILE* fin,uint8_t* mem);
+int load(FILE* fin,uint8_t* mem);
 void retrieve(char* mne, char* ins);
 int run_program(uint8_t* pc, uint8_t* ac, char *mne, uint8_t adr,uint8_t* mem);
 void display(uint8_t* pc, uint8_t* ac, char *mne);
