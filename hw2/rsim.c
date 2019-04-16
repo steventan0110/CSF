@@ -2,21 +2,27 @@
 JHED: wtan12*/
 #include "rsim.h"
 
+//C flag
+static uint8_t C = 0;
+static int size = 0;
+
 //load the content in the file/stdin into the memory of 256 bytes, truncate if too long
-void load(FILE *fin, uint8_t *mem)
+void load(FILE* fin, uint8_t *mem)
 {
     int c;
     int num = 0;
+
+  
     while (((c = fgetc(fin)) != EOF) && (num < SCRAM_SIZE))
     {
+        printf("%c\n",c);
         mem[num] = c;
         num++;
     }
-    if (!feof(fin))
-    {
-        fprintf(stderr, "Program too long, truncated to %d bytes.\n",
-                SCRAM_SIZE);
-    }
+    
+    size = num;
+    printf("%d\n", size);
+    
 }
 
 void retrieve(char *mne, char *ins)
@@ -79,8 +85,7 @@ void display(uint8_t *pc, uint8_t *ac, char *mne)
     *pc = *pc + 1;
 }
 
-
-int check_adr(int size, int adr)
+int check_adr(int adr)
 {
     if (size < adr)
     {
@@ -90,21 +95,16 @@ int check_adr(int size, int adr)
 }
 
 //return 0 if keep running, 1 if stop
-int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, int size)
+int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem)
 {
 
     //retrieve the instruction to compare with all the instructions:
     char ins[4];
     retrieve(mne, ins);
 
-    //C flag
-    uint8_t C = 0;
-
- 
-
     if (strcmp(ins, "HLT") == 0)
     {
-        
+
         display(pc, ac, mne);
         return 1;
     }
@@ -112,17 +112,32 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     {
 
         display(pc, ac, mne);
-        adr = adr << 4;
-        if (run_program(pc, ac, mne, adr, mem, size) == 1)
+        uint8_t new_adr = adr << 4;
+
+        char new_mne[9];
+        uint8_t ir = mem[*pc];
+        uint8_t opc = (ir >> 4) & 0xf;
+        uint8_t adr = (ir & 0xf) | new_adr;
+        opc_decode_sim(opc, adr, new_mne);
+        new_mne[8] = '\0';
+
+        int out = run_program(pc, ac, new_mne, adr, mem);
+
+        if (out == 1)
         {
+
             return 1;
         }
-        return 0;
+        else
+        {
+
+            return 0;
+        }
     }
     else if (strcmp(ins, "LDA") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr(adr))
             exit(5);
 
         *ac = mem[adr];
@@ -131,10 +146,10 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     }
     else if (strcmp(ins, "LDI") == 0)
     {
-        if (check_adr(size, adr))
+        if (check_adr(adr))
             exit(5);
         uint8_t mbr = mem[adr];
-        if (check_adr(size, mbr))
+        if (check_adr(mbr))
             exit(5);
 
         *ac = mem[mbr];
@@ -144,7 +159,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "STA") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr(adr))
             exit(5);
         mem[adr] = *ac;
         display(pc, ac, mne);
@@ -153,10 +168,10 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "STI") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
         uint8_t mbr = mem[adr];
-        if (check_adr(size, mbr))
+        if (check_adr( mbr))
             exit(5);
 
         mem[mbr] = *ac;
@@ -166,13 +181,19 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "ADD") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
 
         if ((int)*ac + (int)mem[adr] > 255)
+        {
             C = 1;
-
+        }
+        else
+        {
+            C = 0;
+        }
         *ac = *ac + mem[adr];
+
         display(pc, ac, mne);
         return 0;
     }
@@ -180,9 +201,18 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "SUB") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
 
+        if ((int)*ac + (uint8_t)~mem[adr] + 1 > 255)
+        {
+            C = 1;
+        }
+        else
+        {
+            C = 0;
+        }
+        //printf("%d, %d\n", *ac, mem[adr]);
         *ac = *ac + ~mem[adr] + 1;
         //check the flag
         display(pc, ac, mne);
@@ -192,7 +222,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     {
 
         display(pc, ac, mne);
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(4);
 
         *pc = adr;
@@ -204,7 +234,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
         display(pc, ac, mne);
         if (*ac == 0)
         {
-            if (check_adr(size, adr))
+            if (check_adr(adr))
                 exit(4);
 
             *pc = adr;
@@ -214,7 +244,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "AND") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
         *ac = *ac & mem[adr];
         display(pc, ac, mne);
@@ -223,7 +253,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "IOR") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
         *ac = *ac | mem[adr];
         display(pc, ac, mne);
@@ -232,7 +262,7 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "XOR") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
         *ac = *ac ^ mem[adr];
         display(pc, ac, mne);
@@ -241,19 +271,31 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "ADL") == 0)
     {
 
-        if (adr < 16 && (adr >> 3) == 1)
-            adr = 0xF0 + adr;
+        if ((adr < 16) && ((adr >> 3) == 1))
+            adr = 0xF0 | adr;
         if ((int)*ac + (int)adr > 255)
+        {
             C = 1;
+        }
+        else
+        {
+            C = 0;
+        }
+
+        char new_mne[9];
+        uint8_t ir = mem[*pc];
+        uint8_t opc = (ir >> 4) & 0xf;
+        opc_decode_sim(opc, adr, new_mne);
+        new_mne[8] = '\0';
 
         *ac = *ac + adr;
-        display(pc, ac, mne);
+        display(pc, ac, new_mne);
         return 0;
     }
     else if (strcmp(ins, "ADC") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr( adr))
             exit(5);
 
         if ((int)*ac + (int)mem[adr] + C > 255)
@@ -266,13 +308,20 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "SBB") == 0)
     {
 
-        if (check_adr(size, adr))
+        if (check_adr(adr))
             exit(5);
 
-        if ((int)*ac + (int)~mem[adr] + C > 255)
-            C = 1;
-
+        int num = (int)*ac + (uint8_t)~mem[adr] + C;
         *ac = *ac + (~mem[adr]) + C;
+        if (num > 255)
+        {
+            C = 1;
+        }
+        else
+        {
+            C = 0;
+        }
+
         display(pc, ac, mne);
         return 0;
     }
@@ -373,16 +422,16 @@ int run_program(uint8_t *pc, uint8_t *ac, char *mne, uint8_t adr, uint8_t *mem, 
     else if (strcmp(ins, "TVA") == 0)
     {
 
-        *ac = C ^ (adr >> 7);
+        *ac = C ^ (*ac >> 7);
         display(pc, ac, mne);
         return 0;
     }
     else if (strcmp(ins, "JAL") == 0)
     {
-
-        *ac = *pc + 1;
-        display(pc, ac, mne);
+        uint8_t temp = *pc + 1;
+        display(pc, &temp, mne);
         *pc = *ac;
+        *ac = temp;
         return 0;
     }
     else if (strcmp(ins, "NOP") == 0)

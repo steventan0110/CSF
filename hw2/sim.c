@@ -10,7 +10,6 @@ void run()
     //initialize the SCRAM
     uint8_t pc = 0;
     uint8_t ac = 0;
-    int size = sizeof(mem) / sizeof(uint8_t);
 
     while (1)
     {
@@ -26,7 +25,7 @@ void run()
         opc_decode_sim(opc, deci_adr, mne);
         mne[8] = '\0';
 
-        if (run_program(&pc, &ac, mne, adr, mem, size) == 1)
+        if (run_program(&pc, &ac, mne, adr, mem) == 1)
         {
             break;
         }
@@ -42,18 +41,20 @@ int main(int argc, char *argv[])
         if (argc == 2)
         {
             FILE *fin = fopen(argv[1], "rb");
+        
             if (fin == NULL)
             {
                 perror("Error opening input file");
                 exit(2);
             }
+            
             load(fin, mem);
             run();
             fclose(fin);
         }
         else
         {
-            load(stdin, mem);
+            load(0, mem);
             run();
         }
     }

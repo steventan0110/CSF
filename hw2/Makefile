@@ -10,11 +10,11 @@ sim.o: sim.c rsim.h
 rsim.o: rsim.c rsim.h 
 	$(CC) $(CFLAGS) -c rsim.c
 
-# dis: dis.o opc.o
-# 	$(CC) dis.o opc.o -o dis
+dis: dis.o opc.o
+	$(CC) dis.o opc.o -o dis
 
-# dis.o: dis.c opc.h
-# 	$(CC) $(CFLAGS) -c dis.c
+dis.o: dis.c opc.h
+	$(CC) $(CFLAGS) -c dis.c
 
 opc.o: opc.c opc.h
 	$(CC) $(CFLAGS) -c opc.c
