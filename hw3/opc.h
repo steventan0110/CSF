@@ -19,5 +19,6 @@ void cat(char *out, char *opc, char *add);
  */
 void opc_decode(int opc, int add, char* output);
 void opc_decode_sim(int opc, int add, char *output);
+int opc_check(char* opc);
 
 #endif

@@ -51,9 +51,9 @@ void cat(char *out, char *opc, char *add)
 	out[3] = ' ';
 	out[4] = '0';
 	out[5] = 'x';
-	for (int i =0; i< (int) strlen(add); i++)
+	for (int i = 0; i < (int)strlen(add); i++)
 	{
-		out[6+i] = *(add+i);
+		out[6 + i] = *(add + i);
 	}
 }
 
@@ -138,10 +138,35 @@ void opc_decode_sim(int opc, int add, char *output)
 		{
 
 			opc_out = opcodes[opc + 1];
-		
+
 			to_hexchar(add, add_out, 2);
 			cat(output, opcodes[opc + 1], add_out);
 		}
 	}
 }
 
+/* 
+return the corresponding opcode in its integer value
+return 32 for DAT and 33 for ORG
+exit with 5 if opcode cannot be found
+*/
+int opc_check(char *opc)
+{
+	for (int i = 0; i < 31; i++)
+	{
+		if (!strcmp(opc, opcodes[i]))
+		{
+			return i;
+		}
+	}
+	if (!strcmp(opc,"DAT"))
+	{
+		return 32;
+	}
+	if (!strcmp(opc, "ORG"))
+	{
+		return 33;
+	}
+	printf("opcode not found.\n");
+	exit(5);
+}
