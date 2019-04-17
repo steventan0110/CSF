@@ -170,3 +170,25 @@ int opc_check(char *opc)
 	printf("opcode not found.\n");
 	exit(5);
 }
+
+//have argument
+int opc_encode_y(uint8_t* opc)
+{
+	//case 1: HLT
+	if (*opc ==0)
+	{
+		return 0;
+	}
+	else 
+	{
+		return (*opc-1);
+	}
+}
+
+//don't have argument
+int opc_encode_n(uint8_t* opc)
+{
+	int temp = *opc - 16;
+	int out = 15<<4 + temp;
+	return out;
+}

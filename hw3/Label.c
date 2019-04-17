@@ -3,15 +3,10 @@ Weiting Tan
 JHED:wtan12
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
+
 
 #include "Label.h"
 
-#define LABEL_SIZE 32
 
 Label *head;
 Label *tail;

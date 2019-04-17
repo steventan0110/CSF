@@ -6,7 +6,15 @@ JHED: wtan12
 #ifndef _LABEL_H
 #define _LABEL_H
 
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
 #define LABEL_SIZE 32
+
 
 /* A label type node in the linked list data structure*/
 typedef struct dummy_node {

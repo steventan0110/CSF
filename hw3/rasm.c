@@ -170,7 +170,7 @@ int addCheck(const char *add)
 }
 
 //given the line of instruction, load it into the opc and add array
-void loadInstruc(const char *ins, uint8_t *ca, uint8_t **opc_array, uint8_t **adr_array)
+void loadInstruc(const char *ins, uint8_t *ca, uint8_t **opc_array, char **adr_array)
 {
     char opc[4];
     char add[LABEL_SIZE] = "";
@@ -183,6 +183,7 @@ void loadInstruc(const char *ins, uint8_t *ca, uint8_t **opc_array, uint8_t **ad
         printf("An invalid op-code was encountered\n");
         exit(5);
     }
+
     //after triming, the first three alphabet should be the opcode
     for (int i = 0; i < 3; i++)
     {
@@ -210,8 +211,59 @@ void loadInstruc(const char *ins, uint8_t *ca, uint8_t **opc_array, uint8_t **ad
         else
         {
             val = addCheck(add);
+            //check special situation for the EXT
+            if ((num == 1) && (val == 0))
+            {
+                printf("invalid opcode");
+                exit(5);
+            }
         }
     }
 
+    strncpy(adr_array[*ca], add, LABEL_SIZE);
+    opc_array[*ca] = num;
+
     *ca++;
+    if (ca == SCRAM_SIZE)
+    {
+        printf("too many lines of input");
+        exit(4);
+    }
+}
+
+void construct(uint8_t *mem, uint8_t *ca, uint8_t **opc_array, char **add_array)
+{
+
+    long val = 0;     // intermediate value
+    char *ptr = NULL; // intermediate pointer
+    uint8_t add = 0;  // address
+    for (int i = 0; i < ca; i++)
+    {
+        //no argument
+        if (!*(add_array + i))
+        {
+            mem[i] = opc_encode_n(opc_array[i]);
+        }
+        else
+        {
+            val = strtol(add_array[i], &ptr, 10);
+            if (ptr == add_array[i])
+            { // if after converting the address is label
+                add = getLabelAdd(add_array[i]);
+            }
+            else
+            {
+                add = val;
+            }
+            if (strcmp("DAT", opc_array[i]) == 0)
+            { // if opc is DAT
+                mem[i] = add;
+            }
+            else
+            { // if opc is not DAT
+                mem[i] = (opc_encode_y(opc_array[i]) << 4);
+                mem[i] = mem[i] + add;
+            }
+        }
+    }
 }
