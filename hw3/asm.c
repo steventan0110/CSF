@@ -10,7 +10,7 @@ static uint8_t mem[SCRAM_SIZE]; /* memory of the SCRAM */
 static int ca;                  /*current address */
 static int adr_used;
 static uint8_t opc_array[SCRAM_SIZE]; //store the opcode
-//static char add_array[SCRAM_SIZE][sizeof(char)]; //store the address
+//static char add_array[SCRAM_SIZE][sizeof(char*)]; //store the address
 
 void toStringMem()
 {
@@ -71,10 +71,10 @@ int main(int argc, char *argv[])
         init_list();
 
         //initialize the address array:
-        char **add_array = malloc(sizeof(char));
+        char **add_array = malloc(sizeof(char*));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
-            *(add_array + i) = malloc(sizeof(char));
+             *(add_array + i) = NULL;
         }
 
         //for read in
