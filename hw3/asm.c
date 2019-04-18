@@ -43,13 +43,16 @@ void check_argument(char *str)
 
 void free_arr(char **adr)
 {
-    for (int i = 0; i < ca; i++)
+    for (int i = 0; i < SCRAM_SIZE; i++)
     {
-        free(*(adr + i));
-        *(adr + i) = NULL;
+        if ((*(adr + i)) != NULL)
+        {
+            free(*(adr + i));
+            *(adr + i) = NULL;
+        }
     }
     free(adr);
-    adr =NULL;
+    adr = NULL;
 }
 
 int main(int argc, char *argv[])
@@ -129,10 +132,10 @@ int main(int argc, char *argv[])
         size_t len = 0;
         ssize_t read;
         //initialize the address array:
-        char **add_array = malloc(SCRAM_SIZE * sizeof(char));
+        char **add_array = malloc(SCRAM_SIZE * sizeof(char *));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
-            *(add_array + i) = malloc(sizeof(char));
+            *(add_array + i) = NULL;
         }
 
         while ((read = getline(&line, &len, fin)) != -1)
