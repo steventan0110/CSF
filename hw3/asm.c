@@ -49,6 +49,7 @@ void free_arr(char **adr)
         *(adr + i) = NULL;
     }
     free(adr);
+    adr =NULL;
 }
 
 int main(int argc, char *argv[])
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
         init_list();
 
         //initialize the address array:
-        char **add_array = malloc(SCRAM_SIZE * sizeof(char));
+        char **add_array = malloc(sizeof(char));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
             *(add_array + i) = malloc(sizeof(char));
