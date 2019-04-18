@@ -1,0 +1,35 @@
+; This example should not produce an error
+	ORG	0
+	DAT	15
+	HLT
+	EXT	15
+	LDA	15
+	LDI	15
+	STA	15
+	STI	15
+	ADD	15
+	SUB	15
+	JMP	15
+	JMZ	15
+	AND	15
+	IOR	15
+	XOR	15
+	ADL	15
+	ADC	15
+	SBB	15
+	NEG
+	COM
+	CLR
+	SET
+	RTL
+	RTR
+	LSL
+	LSR
+	ASR
+	TST
+	CLC
+	SEC
+	TCA
+	TVA
+	JAL
+	NOP

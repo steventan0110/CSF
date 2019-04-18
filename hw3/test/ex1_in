@@ -1,0 +1,18 @@
+	ORG 0
+
+	LDA arg
+	ADD arg
+	STA ret
+	ADD ret
+	STA ret
+	ADD ret
+	STA ret
+	ADD ret
+	STA ret
+	HLT
+	DAT 0
+	DAT 1
+	DAT 16
+	DAT 240
+ret:	DAT 240
+arg:	DAT 0xAB

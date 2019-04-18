@@ -87,7 +87,7 @@ int getLabelAdd(const char *name)
 void append(const char *name, int add)
 {
     tail->next = malloc(sizeof(Label));
-    strncpy(tail->next->str, name, LABEL_SIZE);
+    strncpy(tail->next->str, name, strlen(name));
     tail->next->add = add;
     tail = tail->next; // new tail
 }
@@ -123,6 +123,17 @@ void checkList()
                     current->str);
             exit(7);
         }
+        current = current->next;
+    }
+}
+
+/* toString method to help checking the label and its value.*/
+void toString()
+{
+    Label *current = head;
+    while (current != NULL)
+    {
+        printf("label %s has value %d\n", current->str, current->add);
         current = current->next;
     }
 }

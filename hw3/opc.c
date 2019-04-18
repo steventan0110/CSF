@@ -152,7 +152,7 @@ exit with 5 if opcode cannot be found
 */
 int opc_check(char *opc)
 {
-	for (int i = 0; i < 31; i++)
+	for (int i = 0; i <= 31; i++)
 	{
 		if (!strcmp(opc, opcodes[i]))
 		{
@@ -167,28 +167,36 @@ int opc_check(char *opc)
 	{
 		return 33;
 	}
+	
 	printf("opcode not found.\n");
 	exit(5);
 }
 
 //have argument
-int opc_encode_y(uint8_t* opc)
+int opc_encode_y(uint8_t opc)
 {
-	//case 1: HLT
-	if (*opc ==0)
+	
+	if (opc ==0)
 	{
-		return 0;
+		//case 1: HLT
+		printf("HLT shouldn't have argument");
+		exit(5);
 	}
 	else 
 	{
-		return (*opc-1);
+		return (opc-1);
 	}
 }
 
 //don't have argument
-int opc_encode_n(uint8_t* opc)
+int opc_encode_n(uint8_t opc)
 {
-	int temp = *opc - 16;
-	int out = 15<<4 + temp;
+	if (opc == 0)
+	{
+		//opcode is HLT
+		return 0;
+	}
+	int temp = opc - 16;
+	int out = 240 + temp;
 	return out;
 }

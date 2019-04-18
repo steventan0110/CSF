@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-std=c99 -Wall -Wextra -pedantic
 
 asm: asm.o rasm.o opc.o Label.o
-	$(CC) asm.o rasm.o opc.o -o sim
+	$(CC) asm.o rasm.o opc.o Label.o -o asm
 
 asm.o: asm.c rasm.h 
 	$(CC) $(CFLAGS) -c asm.c
@@ -33,4 +33,4 @@ opc.o: opc.c opc.h
 	$(CC) $(CFLAGS) -c opc.c
 
 clean:
-	rm -f *.o dis sim
+	rm -f *.o dis sim asm

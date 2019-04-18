@@ -10,13 +10,13 @@
 
 
 
-char* trim(char* str);
-
-void loadInstruc(const char *ins, uint8_t* ca, uint8_t** opc_array, char** adr_array);
-void parseFile(FILE *fin, uint8_t* cl, uint8_t* ca, uint8_t**opc, uint8_t**adr);
+int check_digit(char* str);
+void trim(char* str);
+void loadInstruc(const char *ins,int*used, int* ca, uint8_t* opc_array, char** adr_array);
+void parseFile(char* input, int*used,int* ca, uint8_t*opc, char** adr);
 void loadTempLabel(const char *label);
 int addCheck(const char *add);
 int datacheck(char *data);
-void construct(uint8_t* mem, uint8_t *ca, uint8_t **opc_array, char **adr_array);
+void construct(uint8_t* mem, int *ca, uint8_t *opc_array, char **adr_array);
 
 #endif
