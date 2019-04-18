@@ -35,9 +35,12 @@ void freeList()
     while (current != NULL)
     {
         nextLabel = current->next;
+        current->add =0;
         free(current);
+        current = NULL;
         current = nextLabel;
     }
+    head = NULL;
 }
 
 /*
@@ -136,6 +139,10 @@ void checkList()
 void toString()
 {
     Label *current = head;
+    if (head == NULL)
+    {
+        return;
+    }
     while (current != NULL)
     {
         printf("label %s has value %d\n", current->str, current->add);

@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         //toStringMem();
         //free the label:
         freeList();
+        //toString();
         fclose(fin);
         //remember to free the add array!
         free_arr(add_array);
