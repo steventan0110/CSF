@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <stdio.h>
 #include "opc.h"
 #include "Label.h"
