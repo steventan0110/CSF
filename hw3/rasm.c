@@ -57,7 +57,7 @@ void trim(char *str)
 
             *(out + count) = '\0';
             //reach comment, reak the loop
-            strncpy(str, out, sizeof(out));
+            strcpy(str, out);
             break;
         }
         else
@@ -69,7 +69,7 @@ void trim(char *str)
         }
     }
     *(out + count) = '\0';
-    strncpy(str, out, sizeof(out));
+    strcpy(str, out);
 }
 
 void labelCheck(const char *str)
