@@ -46,6 +46,17 @@ void trim(char *str)
     char out[len + 1];
     int count = 0;
     //printf("reach here %d\n", len);
+    if (isalpha(str[0]))
+    {
+        //check if the colon for label is present
+        char* c;
+        c = strchr(str, ':');
+        if (c== NULL)
+        {
+            printf("bad label\n");
+            exit(7);
+        }
+    }
     for (int i = 0; i < len; i++)
     {
         if ((*(str + i) == ' ') || (*(str + i) == '\t') || (*(str + i) == '\n'))
@@ -259,6 +270,11 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     char opc[4];
     int len = strlen(ins);
     char *add = malloc(sizeof(char) * len);
+    if (add == NULL)
+    {
+        printf("malloc error when creating address.\n");
+        exit(9);
+    }
     //printf("%s\n", ins);
     if (len < 3)
     {
@@ -355,16 +371,27 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
         }
         else
         {
+            //there's argument presented
 
             val = strtol(add_array[i], &ptr, 10);
             //printf("reach i:%d, add: %s\n", i, add_array[i]);
             if (ptr == add_array[i])
             { // if after converting the address is label
 
+                //need to check if the instruction is EXT, then the upper four bits are preserved:
                 add = getLabelAdd(add_array[i]);
-                if (add >= 16)
+                if (opc_array[i] == 1)
                 {
-                    add = add >> 4;
+                    add = (add >>4) &0x0f;
+                    if (add == 0)
+                    {
+                        printf("EXT 0 where 0 is from a label.\n");
+                        exit(5);
+                    }
+                }
+                else
+                {
+                    add = add & 0x0f;
                 }
                 //printf("reah here add: %d\n", add);
             }
@@ -378,7 +405,7 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
             }
             else
             { // if opc is not DAT
-
+             
                 int temp = opc_encode_y(opc_array[i]);
                 mem[i] = (temp << 4);
                 mem[i] = mem[i] + add;

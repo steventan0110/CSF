@@ -18,7 +18,7 @@ void init_list()
     if (head == NULL)
     {
         fprintf(stderr, "Error: assembler linked list initialization failed.\n");
-        exit(EXIT_FAILURE);
+        exit(9);
     }
     tail = head; // last and only element is head
     head->next = NULL;
@@ -87,6 +87,11 @@ int getLabelAdd(const char *name)
 void append(const char *name, int add)
 {
     tail->next = malloc(sizeof(Label));
+    if (tail->next == NULL)
+    {
+        printf("malloc error when appending lablels.\n");
+        exit(9);
+    }
     strncpy(tail->next->str, name, strlen(name));
     tail->next->add = add;
     tail = tail->next; // new tail
