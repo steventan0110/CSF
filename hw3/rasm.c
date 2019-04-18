@@ -6,9 +6,26 @@ JHED:wtan12
 #define LINE_SIZE 128
 #define LABEL_SIZE 32
 
-int check_digit(char* str)
+
+void check_org(char* str)
 {
-    for (int i =0; i<strlen(str); i++)
+    char opc[4];
+    for (int i = 0; i < 3; i++)
+    {
+        *(opc + i) = *(str+ i);
+    }
+    opc[3] = '\0';
+    int num = opc_check(opc);
+    if (num == 33)
+    {
+        printf("ORG shouldn't has label\n");
+        exit(7);
+    }
+
+}
+int check_digit(char *str)
+{
+    for (int i = 0; i < strlen(str); i++)
     {
         if (!isdigit(str[i]))
         {
@@ -69,6 +86,18 @@ void labelCheck(const char *str)
             exit(7);
         }
     }
+    char opc[4];
+    for (int i = 0; i < 3; i++)
+    {
+        *(opc + i) = *(str + i);
+    }
+    opc[3] = '\0';
+    if ((opc_check(opc)) != -1)
+    {
+        //the opcode shouldn't be find in the first three alphabet
+        printf("bad label, invalid argument.\n");
+        exit(6);
+    }
     return;
 }
 
@@ -82,8 +111,8 @@ void loadLabel(const char *label, int add)
         }
         else
         {
-            fprintf(stderr, "Error: Label \"%s\" already defined.", label);
-            exit(6);
+            fprintf(stderr, "Error: Label \"%s\" already defined.\n", label);
+            exit(7);
         }
     }
     else
@@ -132,7 +161,7 @@ void parseFile(char *input, int *used, int *ca, uint8_t *opc, char **adr)
     strncpy(temp, input + strlen(label) + 1, len); // 1 for colon
     strncpy(input, temp, len);
     int new_len = strlen(input);
-
+    
     if (!new_len)
     {
         if (((*used) >= SCRAM_SIZE) || ((*ca) >= SCRAM_SIZE))
@@ -144,6 +173,9 @@ void parseFile(char *input, int *used, int *ca, uint8_t *opc, char **adr)
         //do not increment the address, different labels have same address is possible
         return;
     }
+
+    //after label, there shouldn't be ORG directive:
+    check_org(input);
     loadInstruc(input, used, ca, opc, adr); // all thats left is instruction
 }
 
@@ -155,13 +187,13 @@ int datacheck(char *data)
 
     if (ptr == data)
     {
-        printf("%s\n",data);
+        printf("%s\n", data);
         //check if there's error during conversion
         //if argument that should be number is not number, then error
         printf("Conversion error occurred\n");
         exit(6);
     }
-    else if ((val > 255) || (val <-128))
+    else if ((val > 255) || (val < -128))
     {
         fprintf(stderr, "data value out of range.\n");
         exit(6);
@@ -177,12 +209,14 @@ int datacheck(char *data)
     return val;
 }
 
-void loadTempLabel(const char *label)
+int loadTempLabel(const char *label)
 {
     if (find(label) != 1)
     { // if label doesn't exist
         append(label, -1);
+        return 0; 
     }
+    return 1;
 }
 
 int addCheck(const char *add)
@@ -196,10 +230,13 @@ int addCheck(const char *add)
         //add is label instead of a value
         // if after converting to string the pointer isnt \0
         labelCheck(add); // check if valid label
-        loadTempLabel(add);
+        if (loadTempLabel(add))
+        {
+            return getLabelAdd(add);
+        }
         return -1;
     }
-    else if ((val > 15) || (val <-8))
+    else if ((val > 15) || (val < -8))
     {
         fprintf(stderr, "Error: Address out of range (max 15) encountered\n");
         exit(6);
@@ -237,7 +274,12 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     opc[3] = '\0';
     long val;
     int num = opc_check(opc);
-    //printf("%d\n", num);
+    if (num == -1)
+    {
+        printf("opcode not found.\n");
+        exit(5);
+    }
+    printf("%s\n", opc);
 
     //the opcode does not require address
     if ((num == 0) || ((num > 15) && (num < 32)))
@@ -269,10 +311,10 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         else
         {
             val = addCheck(add);
-            //check special situation for the EXT
+            //check special situation for the EXT 0
             if ((num == 1) && (val == 0))
             {
-                printf("invalid opcode\n");
+                printf("invalid opcode EXT 0.\n");
                 exit(5);
             }
         }

@@ -12,13 +12,34 @@ static uint8_t opc_array[SCRAM_SIZE];            //store the opcode
 static char add_array[SCRAM_SIZE][sizeof(char)]; //store the address
 
 
-
 void toStringMem()
 {
     for (int i = 0; i < SCRAM_SIZE; i++)
     {
         printf("mem at address %d is %x\n", i, mem[i]);
     }
+}
+
+/* check if multiple number exist.*/
+void check_argument(char* str)
+{
+    int count=0; 
+    for (int i =0; i<(int)strlen(str) -1; i++)
+    {
+        if (isdigit(str[i]))
+        {
+            if(!isdigit(str[i+1]))
+            {
+                count++;
+            }
+        }
+    }
+    if (count>1)
+    {
+        printf("more than one number entered\n");
+        exit(6);
+    }
+
 }
 
 
@@ -47,7 +68,7 @@ int main(int argc, char *argv[])
         while ((read = getline(&line, &len, fin)) != -1)
         {
             //printf("Retrieved line of length %zu :\n", read);
-            
+            check_argument(line);
             trim(line);
             //printf("%s\n", line);
             parseFile(line, &adr_used,&ca, opc_array, add_array);

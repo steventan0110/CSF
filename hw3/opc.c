@@ -167,9 +167,8 @@ int opc_check(char *opc)
 	{
 		return 33;
 	}
+	return -1;
 	
-	printf("opcode not found.\n");
-	exit(5);
 }
 
 //have argument

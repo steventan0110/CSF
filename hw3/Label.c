@@ -119,7 +119,7 @@ void checkList()
     {
         if (current->add == -1)
         {
-            fprintf(stderr, "Error: label \"%s\" is used but not defined.",
+            fprintf(stderr, "Error: label \"%s\" is used but not defined.\n",
                     current->str);
             exit(7);
         }
