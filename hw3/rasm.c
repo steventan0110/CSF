@@ -23,11 +23,12 @@ void check_org(char* str)
     }
 
 }
-int check_digit(char *str)
+int check_digit(const char *str)
 {
-    for (int i = 0; i < strlen(str); i++)
+    //printf("The number being checked: %s\n",str);
+    for (int i = 0; i < (int)strlen(str); i++)
     {
-        if (!isdigit(str[i]))
+        if ((!isdigit(str[i])) &&(!isalpha(str[i])))
         {
             return 0;
         }
@@ -128,7 +129,7 @@ void loadLabel(const char *label, int add)
 void parseFile(char *input, int *used, int *ca, uint8_t *opc, char **adr)
 {
 
-    printf("%s\n", input);
+    //printf("%s\n", input);
     int len = strlen(input);
     if (!len)
     {
@@ -199,13 +200,14 @@ int datacheck(char *data)
         exit(6);
     }
     //the value can be converted to number
-    //check if data it's not digt
+    //check if data it's not digit
     if (!check_digit(data))
     {
-        printf("invalid number entered\n");
+        //printf("val: %d, data : %s\n",val, data);
+        printf("invalid number entered aa\n");
         exit(6);
     }
-    printf("reach here data:%d\n", val);
+    //printf("reach here data:%d\n", val);
     return val;
 }
 
@@ -279,7 +281,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         printf("opcode not found.\n");
         exit(5);
     }
-    printf("%s\n", opc);
+    //printf("%s\n", opc);
 
     //the opcode does not require address
     if ((num == 0) || ((num > 15) && (num < 32)))
@@ -294,7 +296,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     else
     {
         //the address is require for the operation
-        strncpy(add, ins + 3, len - 3); //copy the address string into add
+        strncpy(add, ins + 3, len); //copy the address string into add
         //printf("%s\n", add);
         if (num == 32)
         {
@@ -323,7 +325,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     //printf("current address is %d:\n", *ca);
     opc_array[*ca] = num;
     //printf("the number stored at location %d is: %d\n", *ca, num);
-
+    free(*(adr_array + (*ca)));
     *(adr_array + (*ca)) = add;
     //printf("address stored at location %d is %s\n",*ca, *(adr_array+ (*ca)));
 

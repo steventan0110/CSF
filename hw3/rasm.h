@@ -10,7 +10,7 @@
 
 
 
-int check_digit(char* str);
+int check_digit(const char* str);
 void trim(char* str);
 void loadInstruc(const char *ins,int*used, int* ca, uint8_t* opc_array, char** adr_array);
 void parseFile(char* input, int*used,int* ca, uint8_t*opc, char** adr);
