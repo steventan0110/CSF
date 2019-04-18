@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         char **add_array = malloc(sizeof(char*));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
-             *(add_array + i) = NULL;
+             *(add_array + i) = malloc(sizeof(char*));
         }
 
         //for read in
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         //toString();
         fclose(fin);
         //remember to free the add array!
-        free_arr(add_array);
+        //free_arr(add_array);
 
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
