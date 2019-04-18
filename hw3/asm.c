@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
         char **add_array = malloc(SCRAM_SIZE * sizeof(char *));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
-            *(add_array + i) = NULL;
+            *(add_array + i) = malloc(sizeof(char*));
         }
 
         while ((read = getline(&line, &len, fin)) != -1)
