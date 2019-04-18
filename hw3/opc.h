@@ -1,6 +1,7 @@
 /*Weiting Tan
 JHED: wtan12*/
 #ifndef _OPC_H
+
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>

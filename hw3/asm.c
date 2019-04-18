@@ -1,6 +1,7 @@
 /* Weiting Tan
 JHED: wtan12
 */
+#define _GNU_SOURCE
 #include "opc.h"
 #include "Label.h"
 #include "rasm.h"
