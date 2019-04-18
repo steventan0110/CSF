@@ -325,7 +325,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     //printf("current address is %d:\n", *ca);
     opc_array[*ca] = num;
     //printf("the number stored at location %d is: %d\n", *ca, num);
-    free(*(adr_array + (*ca)));
+    //free(*(adr_array + (*ca)));
     *(adr_array + (*ca)) = add;
     //printf("address stored at location %d is %s\n",*ca, *(adr_array+ (*ca)));
 

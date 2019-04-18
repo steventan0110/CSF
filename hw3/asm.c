@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         freeList();
         fclose(fin);
         //remember to free the add array!
-        free_arr(add_array);
+        //free_arr(add_array);
 
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
