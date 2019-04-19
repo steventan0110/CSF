@@ -86,14 +86,13 @@ int main(int argc, char *argv[])
         while ((read = getline(&line, &len, fin)) != -1)
         {
             //printf("Retrieved line %s at add %d\n", line,count);
-            check_argument(line);
+            //check_argument(line);
             trim(line);
             //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
-           
         }
+        
         free(line);
-  
         //check if any label has value that's not initialized
         checkList();
 
@@ -131,33 +130,42 @@ int main(int argc, char *argv[])
         //for label initialization:
         init_list();
 
-        //for read in
-        char *line = NULL;
-        size_t len = 0;
-        ssize_t read;
         //initialize the address array:
-        char **add_array = malloc(SCRAM_SIZE * sizeof(char *));
+        char **add_array = malloc(SCRAM_SIZE*sizeof(char*));
         for (int i = 0; i < SCRAM_SIZE; i++)
         {
-            *(add_array + i) = malloc(sizeof(char*));
+             //*(add_array + i) = malloc(sizeof(char*));
+             *(add_array + i) =NULL;
         }
 
+        //for read in
+        char *line = malloc(sizeof(char));
+        size_t len = 0;
+        ssize_t read;
+      
         while ((read = getline(&line, &len, fin)) != -1)
         {
-            printf("Retrieved line of length %zu :\n", read);
+            //printf("Retrieved line %s at add %d\n", line,count);
+            //check_argument(line);
             trim(line);
-            printf("%s\n", line);
+            //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
         }
+        
+        free(line);
         //check if any label has value that's not initialized
         checkList();
 
         construct(mem, &ca, opc_array, add_array);
         //toString();
-        toStringMem();
+        //toStringMem();
         //free the label:
         freeList();
-        //now need to dump the memory into the output file
+        //toString();
+        fclose(fin);
+        //remember to free the add array!
+        free_arr(add_array);
+
         if (((int)fwrite(mem, sizeof(uint8_t), 256, fout) < 256))
         {
             perror("Error writing to output file");
