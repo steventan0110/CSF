@@ -82,14 +82,15 @@ int main(int argc, char *argv[])
         char *line = malloc(SCRAM_SIZE*sizeof(char));
         size_t len = 0;
         ssize_t read;
-
+        int count =0;
         while ((read = getline(&line, &len, fin)) != -1)
         {
-            //printf("Retrieved line of length %zu :\n", read);
+            //printf("Retrieved line %s at add %d\n", line,count);
             check_argument(line);
             trim(line);
             //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
+            count++;
         }
         free(line);
         //check if any label has value that's not initialized

@@ -318,6 +318,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         {
             //the instruction is DAT
             val = datacheck(add);
+            //printf("dat instruction has value: %d string is: %s\n", val, add);
         }
         else if (num == 33)
         {
@@ -357,6 +358,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
 void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
 {
 
+    //printf("construct address %d", *ca);
     long val = 0;     // intermediate value
     char *ptr = NULL; // intermediate pointer
     uint8_t add = 0;  // address
@@ -373,7 +375,7 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
         {
             //there's argument presented
 
-            val = strtol(add_array[i], &ptr, 10);
+            val = strtol(add_array[i], &ptr, 0);
             //printf("reach i:%d, add: %s\n", i, add_array[i]);
             if (ptr == add_array[i])
             { // if after converting the address is label
@@ -395,13 +397,17 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
                 }
                 //printf("reah here add: %d\n", add);
             }
+
             else
             {
                 add = val;
+                //printf("add = val: %d",val);
             }
+
             if (opc_array[i] == 32)
             { // if opc is DAT
                 mem[i] = add;
+                //printf("address %d value is %d\n", i, add);
             }
             else
             { // if opc is not DAT
