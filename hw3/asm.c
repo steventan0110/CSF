@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
             trim(line);
             //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
+            free(line);
+            line = NULL;
         }
         //check if any label has value that's not initialized
         checkList();
