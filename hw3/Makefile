@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -g
 
 asm: asm.o rasm.o opc.o Label.o
 	$(CC) asm.o rasm.o opc.o Label.o -o asm
