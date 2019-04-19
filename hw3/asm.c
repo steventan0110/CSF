@@ -58,8 +58,55 @@ void free_arr(char **adr)
 int main(int argc, char *argv[])
 {
 
+    if (argc == 1)
+    {
+        //for label initialization:
+        init_list();
+
+        //initialize the address array:
+        char **add_array = malloc(SCRAM_SIZE*sizeof(char*));
+        for (int i = 0; i < SCRAM_SIZE; i++)
+        {
+             //*(add_array + i) = malloc(sizeof(char*));
+             *(add_array + i) =NULL;
+        }
+
+        //for read in
+        char *line = malloc(sizeof(char));
+        size_t len = 0;
+        ssize_t read;
+      
+        while ((read = getline(&line, &len, stdin)) != -1)
+        {
+            //printf("Retrieved line %s at add %d\n", line,count);
+            //check_argument(line);
+            trim(line);
+            //printf("line %s has len %d\n", line, strlen(line));
+            parseFile(line, &adr_used, &ca, opc_array, add_array);
+        }
+        
+        free(line);
+        //check if any label has value that's not initialized
+        checkList();
+
+        construct(mem, &ca, opc_array, add_array);
+        //toString();
+        //toStringMem();
+        //free the label:
+        freeList();
+        //toString();
+        //remember to free the add array!
+        free_arr(add_array);
+
+        for (int i = 0; i < SCRAM_SIZE; i++)
+        {
+            printf("%c", mem[i]);
+        }
+    }
+
+
     //read in from a file
-    if (argc == 2)
+    else if (argc == 2)
     {
         FILE *fin = fopen(argv[1], "rb");
         if (fin == NULL)
@@ -182,3 +229,6 @@ int main(int argc, char *argv[])
     }
     exit(EXIT_SUCCESS);
 }
+
+   
+
