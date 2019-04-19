@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         }
 
         //for read in
-        char *line = NULL;
+        char *line = malloc(sizeof(SCRAM_SIZE));
         size_t len = 0;
         ssize_t read;
 
@@ -90,9 +90,8 @@ int main(int argc, char *argv[])
             trim(line);
             //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
-            free(line);
-            line = NULL;
         }
+        free(line);
         //check if any label has value that's not initialized
         checkList();
 
