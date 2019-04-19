@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         }
 
         //for read in
-        char *line = malloc(sizeof(SCRAM_SIZE));
+        char *line = malloc(SCRAM_SIZE*sizeof(char));
         size_t len = 0;
         ssize_t read;
 

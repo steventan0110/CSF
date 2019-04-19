@@ -269,7 +269,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
 {
     char opc[4];
     int len = strlen(ins);
-    char *add = malloc((len+1)*sizeof(char));
+    char *add = malloc((len)*sizeof(char));
     if (add == NULL)
     {
         printf("malloc error when creating address.\n");
