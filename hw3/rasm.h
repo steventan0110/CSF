@@ -17,6 +17,7 @@ void loadInstruc(const char *ins,int*used, int* ca, uint8_t* opc_array, char** a
 void parseFile(char* input, int*used,int* ca, uint8_t*opc, char** adr);
 int loadTempLabel(const char *label);
 int addCheck(const char *add);
+int addCheckDat(const char *add);
 int datacheck(char *data);
 void construct(uint8_t* mem, int *ca, uint8_t *opc_array, char **adr_array);
 

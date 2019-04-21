@@ -25,10 +25,10 @@ void check_org(char* str)
 }
 int check_digit(const char *str)
 {
-    //printf("The number being checked: %s\n",str);
+
     for (int i = 0; i < (int)strlen(str); i++)
     {
-        if ((!isdigit(str[i])) &&(!isalpha(str[i])))
+        if ((!isdigit(str[i])) &&(!isalpha(str[i]))&&(str[i] != '-')&&(str[i] != '+'))
         {
             return 0;
         }
@@ -45,7 +45,7 @@ void trim(char *str)
     int len = strlen(str);
     char out[len + 1];
     int count = 0;
-    //printf("reach here %d\n", len);
+
     if (isalpha(str[0]))
     {
         //check if the colon for label is present
@@ -140,7 +140,6 @@ void loadLabel(const char *label, int add)
 void parseFile(char *input, int *used, int *ca, uint8_t *opc, char **adr)
 {
 
-    //printf("%s\n", input);
     int len = strlen(input);
     if (!len)
     {
@@ -157,7 +156,6 @@ void parseFile(char *input, int *used, int *ca, uint8_t *opc, char **adr)
 
     if (!colon)
     { // if only instruction
-        //printf("reach here, no colon\n");
         loadInstruc(input, used, ca, opc, adr);
         return;
     }
@@ -199,7 +197,6 @@ int datacheck(char *data)
 
     if (ptr == data)
     {
-        printf("%s\n", data);
         //check if there's error during conversion
         //if argument that should be number is not number, then error
         printf("Conversion error occurred\n");
@@ -214,11 +211,10 @@ int datacheck(char *data)
     //check if data it's not digit
     if (!check_digit(data))
     {
-        //printf("val: %d, data : %s\n",val, data);
-        printf("invalid number entered aa\n");
+        printf("invalid number entered\n");
         exit(6);
     }
-    //printf("reach here data:%d\n", val);
+
     return val;
 }
 
@@ -236,7 +232,40 @@ int addCheck(const char *add)
 {
     long val;
     char *ptr;
-    val = strtol(add, &ptr, 10);
+    val = strtol(add, &ptr, 0);
+
+    if (ptr == add)
+    {
+        //add is label instead of a value
+        // if after converting to string the pointer isnt \0
+        labelCheck(add); // check if valid label
+        
+        if (loadTempLabel(add))
+        {
+            return getLabelAdd(add);
+        }
+        return -1;
+    }
+    else if ((val > 15) || (val < -8))
+    {
+        fprintf(stderr, "Error: Address out of range (max 15) encountered\n");
+        exit(6);
+    }
+    //the value can be converted to number
+    //check if data it's not digt
+    if (!check_digit(add))
+    {
+        printf("invalid number entered\n");
+        exit(6);
+    }
+    return val;
+}
+
+int addCheckDat(const char *add)
+{
+    long val;
+    char *ptr;
+    val = strtol(add, &ptr, 0);
 
     if (ptr == add)
     {
@@ -249,7 +278,7 @@ int addCheck(const char *add)
         }
         return -1;
     }
-    else if ((val > 15) || (val < -8))
+    else if ((val > 255) || (val < -128))
     {
         fprintf(stderr, "Error: Address out of range (max 15) encountered\n");
         exit(6);
@@ -275,11 +304,9 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         printf("malloc error when creating address.\n");
         exit(9);
     }
-    //printf("%s\n", ins);
     if (len < 3)
     {
         //invalid instruction
-        //printf("len: %d\n",len);
         printf("An invalid op-code was encountered\n");
         exit(5);
     }
@@ -297,7 +324,7 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         printf("opcode not found.\n");
         exit(5);
     }
-    //printf("%s\n", opc);
+   
 
     //the opcode does not require address
     if ((num == 0) || ((num > 15) && (num < 32)))
@@ -313,16 +340,13 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
     {
         //the address is require for the operation
         strncpy(add, ins + 3, len); //copy the address string into add
-        //printf("%s\n", add);
         if (num == 32)
         {
             //the instruction is DAT
-            val = datacheck(add);
-            //printf("dat instruction has value: %d string is: %s\n", val, add);
+            val = addCheckDat(add);
         }
         else if (num == 33)
         {
-
             //the instruction is ORG
             *ca = datacheck(add);
             return;
@@ -339,12 +363,9 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
         }
     }
 
-    //printf("current address is %d:\n", *ca);
+    
     opc_array[*ca] = num;
-    //printf("the number stored at location %d is: %d\n", *ca, num);
-    //free(*(adr_array + (*ca)));
     *(adr_array + (*ca)) = add;
-    //printf("address stored at location %d is %s\n",*ca, *(adr_array+ (*ca)));
 
     if (((*used) >= SCRAM_SIZE) || ((*ca) >= SCRAM_SIZE))
     {
@@ -358,13 +379,17 @@ void loadInstruc(const char *ins, int *used, int *ca, uint8_t *opc_array, char *
 void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
 {
 
-    //printf("construct address %d", *ca);
+    
     long val = 0;     // intermediate value
     char *ptr = NULL; // intermediate pointer
     uint8_t add = 0;  // address
-    //printf("address is %c\n", add_array[1]);
+
     for (int i = 0; i < (*ca); i++)
     {
+        if (add_array[i] == NULL) {
+            //prevent the seg fault resulted by ORG
+            continue;
+        }
         int len = strlen(add_array[i]);
         //no argument
         if (!len)
@@ -376,7 +401,6 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
             //there's argument presented
 
             val = strtol(add_array[i], &ptr, 0);
-            //printf("reach i:%d, add: %s\n", i, add_array[i]);
             if (ptr == add_array[i])
             { // if after converting the address is label
 
@@ -391,31 +415,31 @@ void construct(uint8_t *mem, int *ca, uint8_t *opc_array, char **add_array)
                         exit(5);
                     }
                 }
+                else if (opc_array[i] == 32) 
+                {
+                    //do nothing on data, just return full data
+                    add = add & 0xff;
+                }
                 else
                 {
+                    //if not EXT or DAT, only preserve the last four bits
                     add = add & 0x0f;
                 }
-                //printf("reah here add: %d\n", add);
             }
-
             else
             {
                 add = val;
-                //printf("add = val: %d",val);
             }
 
             if (opc_array[i] == 32)
             { // if opc is DAT
                 mem[i] = add;
-                //printf("address %d value is %d\n", i, add);
             }
             else
             { // if opc is not DAT
-             
                 int temp = opc_encode_y(opc_array[i]);
                 mem[i] = (temp << 4);
-                mem[i] = mem[i] + add;
-                //printf("mem is %x\n",mem[i]);
+                mem[i] = mem[i] + (add & 0x0f);
             }
         }
     }
