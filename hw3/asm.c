@@ -123,10 +123,7 @@ int main(int argc, char *argv[])
       
         while ((read = getline(&line, &len, fin)) != -1)
         {
-            //printf("Retrieved line %s at add %d\n", line,count);
-            //check_argument(line);
             trim(line);
-            //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
         }
         
@@ -179,20 +176,15 @@ int main(int argc, char *argv[])
       
         while ((read = getline(&line, &len, fin)) != -1)
         {
-            //printf("Retrieved line %s at add %d\n", line,count);
-            //check_argument(line);
             trim(line);
-            //printf("line %s has len %d\n", line, strlen(line));
             parseFile(line, &adr_used, &ca, opc_array, add_array);
         }
         
         free(line);
         //check if any label has value that's not initialized
         checkList();
-        
         construct(mem, &ca, opc_array, add_array);
-    
-        //toStringMem();
+
         //free the label:
         freeList();
         fclose(fin);

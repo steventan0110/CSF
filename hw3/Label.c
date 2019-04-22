@@ -3,8 +3,6 @@ Weiting Tan
 JHED:wtan12
  */
 
-
-
 #include "Label.h"
 
 
