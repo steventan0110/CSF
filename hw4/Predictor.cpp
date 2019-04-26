@@ -3,17 +3,17 @@
  */
 #include "Predictor.hpp"
 
-unsigned Predictor::get_correct()
+unsigned long long Predictor::get_correct()
 {
         return (this->correct);
 }
 
-unsigned Predictor::get_incorrect()
+unsigned long long Predictor::get_incorrect()
 {
         return (this->incor);
 }
 
-unsigned Predictor::get_collision()
+unsigned long long Predictor::get_collision()
 {
         return (this->coli);
 }

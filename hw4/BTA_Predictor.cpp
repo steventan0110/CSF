@@ -11,7 +11,7 @@ BTA_Predictor::BTA_Predictor()
     this->colided = false;
 }
 
-bool BTA_Predictor::get_result(int branch, int target, bool f)
+bool BTA_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     //update num of correct and inccorect
@@ -51,7 +51,7 @@ bool BTA_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool BTA_Predictor::predict(int branch, int target)
+bool BTA_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     int hashcode = ((target & 0x1f)+ ((branch & 0x1f) << 5));
     //check if the position is visted
@@ -73,7 +73,7 @@ bool BTA_Predictor::predict(int branch, int target)
 
 
 
-bool BTA_Predictor::collided(int branch, int target) 
+bool BTA_Predictor::collided(unsigned long long branch, unsigned long long target) 
 {
     int hashcode = ((target & 0x1f)+ ((branch & 0x1f) << 5));
     //std::cout<<"reach here hashcode =" << hashcode <<std::endl;

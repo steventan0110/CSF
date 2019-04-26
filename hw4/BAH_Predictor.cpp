@@ -10,7 +10,7 @@ BAH_Predictor::BAH_Predictor()
     this->colided = false;
 }
 
-bool BAH_Predictor::get_result(int branch, int target, bool f)
+bool BAH_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     //update num of corre·ct and inccorect
@@ -50,7 +50,7 @@ bool BAH_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool BAH_Predictor::predict(int branch, int target)
+bool BAH_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     //suppress the unsued warning
     int i = target;
@@ -74,7 +74,7 @@ bool BAH_Predictor::predict(int branch, int target)
     }
 }
 
-bool BAH_Predictor::collided(int branch) 
+bool BAH_Predictor::collided(unsigned long long branch) 
 {
     int hashcode = (branch & 0x3ff);
 

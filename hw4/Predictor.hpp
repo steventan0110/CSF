@@ -12,20 +12,20 @@ using std::string;
 class Predictor
 {
       protected:
-        unsigned correct;
-        unsigned incor;
-        unsigned coli;
+        unsigned long long correct;
+        unsigned long long incor;
+        unsigned long long coli;
         string name;
 
         /*
          * Takes pc and bt and return predicted taken or not.
          */
-        virtual bool predict(int pc, int bt) = 0;
+        virtual bool predict(unsigned long long pc, unsigned long long bt) = 0;
 
       public:
-        unsigned get_correct();
-        unsigned get_incorrect();
-        unsigned get_collision();
+        unsigned long long get_correct();
+        unsigned long long get_incorrect();
+        unsigned long long get_collision();
         void inc_cor();
         void inc_inc();
         void inc_coli();
@@ -35,7 +35,7 @@ class Predictor
          * and use the predictor set by the argument to predict the 
          * branch, then return true if prediction is correct.
          */
-        virtual bool get_result(int pc, int bt, bool ind) = 0;
+        virtual bool get_result(unsigned long long pc, unsigned long long bt, bool ind) = 0;
 
         /* Virtual destructor */
         virtual ~Predictor() = default;

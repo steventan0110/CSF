@@ -33,7 +33,7 @@ static Predictor *col;
 static Predictor *two;
 static int cl;         /* current line number */
 
-static void opc(Predictor *p, int banch, int target, bool token)
+static void opc(Predictor *p, unsigned long long banch, unsigned long long target, bool token)
 {
     p->get_result(banch, target, token);
 }
@@ -54,11 +54,6 @@ static void print_predictor(Predictor *p)
  */
 static void parse()
 {
-    int pc;
-    int bt;
-
-    bool result;
-    bool actual;
 
     //initiate the pointer to different pointer:
     sta = new STA_Predictor();

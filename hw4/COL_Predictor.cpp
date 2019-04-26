@@ -11,7 +11,7 @@ COL_Predictor::COL_Predictor()
     this->colided = false;
 }
 
-bool COL_Predictor::get_result(int branch, int target, bool f)
+bool COL_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     //update num of corre·ct and inccorect
@@ -37,7 +37,7 @@ bool COL_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool COL_Predictor::predict(int branch, int target)
+bool COL_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     int hashcode = (branch & 0x3ff);
     //check if the position is visted
@@ -66,7 +66,7 @@ bool COL_Predictor::predict(int branch, int target)
     }
 }
 
-bool COL_Predictor::collided(int branch) 
+bool COL_Predictor::collided(unsigned long long branch) 
 {
     int hashcode = (branch & 0x3ff);
 

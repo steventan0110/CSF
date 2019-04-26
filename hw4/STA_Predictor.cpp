@@ -9,7 +9,7 @@ STA_Predictor::STA_Predictor()
 }
 
 
-bool STA_Predictor::get_result(int branch, int target, bool f)
+bool STA_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
         bool v = (f == this->predict(branch, target));
         //update num of correct and inccorect
@@ -25,7 +25,7 @@ bool STA_Predictor::get_result(int branch, int target, bool f)
         return v;
 }
 
-bool STA_Predictor::predict(int branch, int target)
+bool STA_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
         if (branch > target) {
                 return true;

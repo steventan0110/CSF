@@ -10,7 +10,7 @@ SAT_Predictor::SAT_Predictor()
     this->colided = false;
 }
 
-bool SAT_Predictor::get_result(int branch, int target, bool f)
+bool SAT_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     int hashcode = (branch & 0x3ff);
@@ -75,12 +75,12 @@ bool SAT_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool SAT_Predictor::predict(int branch, int target)
+bool SAT_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     //suppress the unsued warning
     int i = target;
     i++;
-    
+
     int hashcode = (branch & 0x3ff);
     //check if the position is visted
     if (this->collided(branch))
@@ -99,7 +99,7 @@ bool SAT_Predictor::predict(int branch, int target)
     }
 }
 
-bool SAT_Predictor::collided(int branch) 
+bool SAT_Predictor::collided(unsigned long long branch) 
 {
     int hashcode = (branch & 0x3ff);
     if (this->col[hashcode] != branch)

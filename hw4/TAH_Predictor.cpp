@@ -11,7 +11,7 @@ TAH_Predictor::TAH_Predictor()
     this->colided = false;
 }
 
-bool TAH_Predictor::get_result(int branch, int target, bool f)
+bool TAH_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     //update num of corre·ct and inccorect
@@ -52,7 +52,7 @@ bool TAH_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool TAH_Predictor::predict(int branch, int target)
+bool TAH_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     int hashcode = (target & 0x3ff);
     //check if the position is visted
@@ -72,7 +72,7 @@ bool TAH_Predictor::predict(int branch, int target)
     }
 }
 
-bool TAH_Predictor::collided(int branch, int target) 
+bool TAH_Predictor::collided(unsigned long long branch, unsigned long long target) 
 {
     int hashcode = (target & 0x3ff);
     if (this->bcol[hashcode] != branch)

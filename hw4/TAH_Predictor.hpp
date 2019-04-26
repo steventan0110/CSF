@@ -11,7 +11,7 @@ class TAH_Predictor : public Predictor
 {
     private:
     int table[TABLE_SIZE] = {};
-    int bcol[TABLE_SIZE] = {};
+    unsigned long long bcol[TABLE_SIZE] = {};
     bool colided;
 
 
@@ -19,11 +19,11 @@ class TAH_Predictor : public Predictor
     /* Constructor */
     TAH_Predictor();
 
-    bool get_result(int branch, int target, bool f);
+    bool get_result(unsigned long long branch, unsigned long long target, bool f);
 
-    bool predict(int branch, int target);
+    bool predict(unsigned long long branch, unsigned long long target);
 
-    bool collided(int branch, int target);
+    bool collided(unsigned long long branch, unsigned long long target);
     
     /* Destructor */
     ~TAH_Predictor() = default;

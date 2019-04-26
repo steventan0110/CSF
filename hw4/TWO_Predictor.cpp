@@ -10,7 +10,7 @@ TWO_Predictor::TWO_Predictor()
     this->colided = false;
 }
 
-bool TWO_Predictor::get_result(int branch, int target, bool f)
+bool TWO_Predictor::get_result(unsigned long long branch, unsigned long long target, bool f)
 {
     bool v = (f == this->predict(branch, target));
     int hashcode = (branch & 0x3ff);
@@ -63,7 +63,7 @@ bool TWO_Predictor::get_result(int branch, int target, bool f)
     return v;
 }
 
-bool TWO_Predictor::predict(int branch, int target)
+bool TWO_Predictor::predict(unsigned long long branch, unsigned long long target)
 {
     //suppress the unsued warning
     int i = target;
@@ -89,7 +89,7 @@ bool TWO_Predictor::predict(int branch, int target)
     }
 }
 
-bool TWO_Predictor::collided(int branch)
+bool TWO_Predictor::collided(unsigned long long branch)
 {
     int hashcode = (branch & 0x3ff);
 

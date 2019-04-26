@@ -12,7 +12,7 @@ class TWO_Predictor : public Predictor
     private:
     int his[TABLE_SIZE] = {}; //keep the history bits
     int table[32] = {}; //keep the taken or not taken information
-    int col[TABLE_SIZE] = {}; //keep track of the collision, store the upper bits
+    unsigned long long col[TABLE_SIZE] = {}; //keep track of the collision, store the upper bits
     bool colided;
 
 
@@ -20,11 +20,11 @@ class TWO_Predictor : public Predictor
     /* Constructor */
     TWO_Predictor();
 
-    bool get_result(int branch, int target, bool f);
+    bool get_result(unsigned long long branch, unsigned long long target, bool f);
 
-    bool predict(int branch, int target);
+    bool predict(unsigned long long branch, unsigned long long target);
 
-    bool collided(int branch); 
+    bool collided(unsigned long long branch); 
 
     /* Destructor */
     ~TWO_Predictor() = default;

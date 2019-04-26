@@ -10,9 +10,9 @@ class STA_Predictor : public Predictor
     /* Constructor */
     STA_Predictor();
 
-    bool get_result(int branch, int target, bool f);
+    bool get_result(unsigned long long branch, unsigned long long target, bool f);
 
-    bool predict(int branch, int target);
+    bool predict(unsigned long long branch, unsigned long long target);
 
     /* Destructor */
     ~STA_Predictor() = default;
