@@ -7,13 +7,14 @@
 #include <cstring>
 #include "caching.hpp"
 #include "DIR_caching.hpp"
-
+#include "ASS_caching.hpp"
 
 
 using namespace std;
 
 
 static caching * dir;
+static caching * ass;
 
 static void opc(caching *p, unsigned long long adr)
 {
@@ -38,7 +39,7 @@ static void parse()
 
     //initiate the pointer to different pointer:
     dir = new DIR_caching();
-    
+    ass = new ASS_caching(); 
     //the branch address
     unsigned long long adr;
   
@@ -60,11 +61,12 @@ static void parse()
         }
     
         opc(dir, adr);
+        opc(ass, adr);
    
     }
     
     print_cache(dir);
-    
+    print_cache(ass);
 }
 
 /*
@@ -76,6 +78,7 @@ int main(int argc, char *argv[])
     //parse in the input from stdin:
     parse();
     delete dir;
+    delete ass;
 
     return EXIT_SUCCESS;
 }
