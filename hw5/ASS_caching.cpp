@@ -11,12 +11,20 @@ int ASS_caching::find_unused()
 {
     int min = check[0];
     int pos = 0;
+    if (min == 0)
+    {
+        return 0;
+    }
     for (int i = 1; i < MAX; i++)
     {
         if (check[i] < min)
         {
             min = check[i];
             pos = i;
+        }
+        if (min == 0)
+        {
+            return pos; 
         }
     }
     return pos;

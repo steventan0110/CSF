@@ -8,13 +8,14 @@
 #include "caching.hpp"
 #include "DIR_caching.hpp"
 #include "ASS_caching.hpp"
-
+#include "SET_caching.hpp"
 
 using namespace std;
 
 
 static caching * dir;
 static caching * ass;
+static caching * set;
 
 static void opc(caching *p, unsigned long long adr)
 {
@@ -40,6 +41,7 @@ static void parse()
     //initiate the pointer to different pointer:
     dir = new DIR_caching();
     ass = new ASS_caching(); 
+    set = new SET_caching();
     //the branch address
     unsigned long long adr;
   
@@ -62,11 +64,12 @@ static void parse()
     
         opc(dir, adr);
         opc(ass, adr);
-   
+        opc(set, adr);
     }
     
     print_cache(dir);
     print_cache(ass);
+    print_cache(set);
 }
 
 /*
@@ -79,6 +82,6 @@ int main(int argc, char *argv[])
     parse();
     delete dir;
     delete ass;
-
+    delete set;
     return EXIT_SUCCESS;
 }
