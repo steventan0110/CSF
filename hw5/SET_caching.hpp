@@ -6,16 +6,15 @@
 
 #include "caching.hpp"
 #include <string>
-#include <stack>
-#define MAX 2048
+#define MAX_SET 2048
 
 class SET_caching : public caching
 {
 
   private:
  
-    unsigned long long set[MAX][4] = {}; //use 2D array to store the set
-    unsigned long long collision[MAX][4] = {}; //store the value in the corresponding location
+    unsigned long long set[MAX_SET][4] = {}; //use 2D array to store the set
+    unsigned long long collision[MAX_SET][4] = {}; //store the value in the corresponding location
     unsigned long long cycle = 0;
 
 

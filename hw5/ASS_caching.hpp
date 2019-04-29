@@ -6,15 +6,14 @@
 
 #include "caching.hpp"
 #include <string>
-#include <stack>
-#define MAX 8192
+#define MAX_Line 8192
 
 class ASS_caching : public caching
 {
 
   private:
-    unsigned long long check[MAX] = {}; //store the time the address is used last time
-    unsigned long long collision[MAX] = {}; //store the value in the corresponding location
+    unsigned long long check[MAX_Line] = {}; //store the time the address is used last time
+    unsigned long long collision[MAX_Line] = {}; //store the value in the corresponding location
     unsigned long long cycle = 0;
 
 

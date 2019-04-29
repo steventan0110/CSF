@@ -9,19 +9,36 @@
 #include "DIR_caching.hpp"
 #include "ASS_caching.hpp"
 #include "SET_caching.hpp"
+#include "BLK_caching.hpp"
+#include "NWA_caching.hpp"
+#include "PRF_caching.hpp"
 
 using namespace std;
 
-
+static int cl;
 static caching * dir;
 static caching * ass;
 static caching * set;
+static caching * blk;
+static NWA_caching * nwa;
+static PRF_caching * prf;
 
 static void opc(caching *p, unsigned long long adr)
 {
     p->check_hit(adr);
 }
 
+static void opc_nwa(NWA_caching *p, unsigned long long adr, bool store)
+{
+    p->set_load(store);
+    p->check_hit(adr);
+}
+
+static void opc_prf(PRF_caching *p, unsigned long long adr, bool store)
+{
+    p->set_load(store);
+    p->check_hit(adr);
+}
 
 static void print_cache(caching *p)
 {
@@ -42,6 +59,9 @@ static void parse()
     dir = new DIR_caching();
     ass = new ASS_caching(); 
     set = new SET_caching();
+    blk = new BLK_caching();
+    nwa = new NWA_caching();
+    prf = new PRF_caching(); 
     //the branch address
     unsigned long long adr;
   
@@ -51,7 +71,8 @@ static void parse()
     //read in the data per line with fixed format
     while (scanf("%llx %c", &adr, &f) == 2)
     {
-
+        cl++;
+        //cout << "reach line: "<<cl << endl;
         bool store;
         if (f == 'S')
         {
@@ -65,11 +86,17 @@ static void parse()
         opc(dir, adr);
         opc(ass, adr);
         opc(set, adr);
+        opc(blk, adr);
+        opc_nwa(nwa, adr, store);
+        opc_prf(prf, adr, store);
     }
     
     print_cache(dir);
     print_cache(ass);
     print_cache(set);
+    print_cache(blk);
+    print_cache(nwa);
+    print_cache(prf);
 }
 
 /*
@@ -83,5 +110,8 @@ int main(int argc, char *argv[])
     delete dir;
     delete ass;
     delete set;
+    delete blk;
+    delete nwa;
+    delete prf;
     return EXIT_SUCCESS;
 }

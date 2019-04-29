@@ -9,13 +9,13 @@ ASS_caching::ASS_caching()
 
 int ASS_caching::find_unused()
 {
-    int min = check[0];
+    unsigned long long min = check[0];
     int pos = 0;
     if (min == 0)
     {
         return 0;
     }
-    for (int i = 1; i < MAX; i++)
+    for (int i = 1; i < MAX_Line; i++)
     {
         if (check[i] < min)
         {
@@ -40,6 +40,7 @@ bool ASS_caching::check_hit(unsigned long long adr)
         (this->hits)++;
         //update the use of the slot
         check[pos] = cycle;
+        return true;
     }
     else
     {
@@ -49,13 +50,14 @@ bool ASS_caching::check_hit(unsigned long long adr)
         int unused = this->find_unused();
         check[unused] = cycle;
         collision[unused] = adr;
+        return false;
     }
 }
 
 int ASS_caching::has_adr(unsigned long long adr)
 {
     (this->cycle)++;
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < MAX_Line; i++)
     {
         if (collision[i] == adr)
         {

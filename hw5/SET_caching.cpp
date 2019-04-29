@@ -11,7 +11,7 @@ SET_caching::SET_caching()
 
 int SET_caching::find_unused(int hashcode)
 {
-    int min = set[hashcode][0];
+    unsigned long long min = set[hashcode][0];
     int pos = 0;
     if (min == 0)
     {
@@ -43,6 +43,7 @@ bool SET_caching::check_hit(unsigned long long adr)
         (this->hits)++;
         //update the use of the slot
         set[hashcode][pos] = cycle;
+        return true;
     }
     else
     {
@@ -52,6 +53,7 @@ bool SET_caching::check_hit(unsigned long long adr)
         int unused = this->find_unused(hashcode);
         set[hashcode][unused] = cycle;
         collision[hashcode][unused] = adr;
+        return false;
     }
 }
 
