@@ -48,21 +48,30 @@ bool PRF_caching::check_hit(unsigned long long adr)
     {
         //miss, need to store the value in a new place
         (this->miss)++;
-
         if (this->load)
         {
             //check frequency of each slot
             int unused = this->find_unused(hash_set);
             block[hash_set][unused] = cycle;
-            (this->cycle)++;
-            
-            int new_set = (hash_set + 1) & 0xff;
+
             //only update the memory if it's a load
             collision[hash_set][unused] = adr_used;
-            int unused1 = this->find_unused(new_set);
-            collision[new_set][unused1] = adr_used + 8;
-            block[new_set][unused1] = cycle;
+
+            int new_set = (hash_set + 1) & 0xff;
+            int new_pos = this->has_adr(adr + 8);
+            if (new_pos != -1)
+            {
+                //the second block already exist
+                block[new_set][new_pos] = cycle;
+            }
+            else
+            {
+                int unused1 = this->find_unused(new_set);
+                collision[new_set][unused1] = adr_used + 8;
+                block[new_set][unused1] = cycle;
+            }
         }
+        
         return false;
     }
 }
