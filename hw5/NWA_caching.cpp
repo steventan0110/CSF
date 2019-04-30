@@ -34,7 +34,7 @@ bool NWA_caching::check_hit(unsigned long long adr)
 {
     int hash_set = ((adr & 0x7f8) >> 3);
     int hash_block = adr & 0x7;
-    int adr_used = adr - hash_block;
+    unsigned long long adr_used = adr - hash_block;
     int pos = this->has_adr(adr);
     if (pos != -1)
     {
@@ -49,11 +49,12 @@ bool NWA_caching::check_hit(unsigned long long adr)
         (this->miss)++;
         //check frequency of each slot
         int unused = this->find_unused(hash_set);
-        block[hash_set][unused] = cycle;
+        
         if (this->load)
         {
             //only update the memory if it's a load
             collision[hash_set][unused] = adr_used;
+            block[hash_set][unused] = cycle;
         }
         return false;
     }
