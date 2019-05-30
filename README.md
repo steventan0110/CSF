@@ -3,13 +3,11 @@
 
 hw1: hex dump
 
-hw2: disassembler
+hw2: disassembler & simulator
 
-hw3: simulator
+hw3: assembler
 
-hw4: assembler
+hw4: branch prediction
 
-hw5: branch prediction
-
-hw6: caching technique
+hw5: caching technique
 
